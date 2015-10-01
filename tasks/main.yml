@@ -10,12 +10,12 @@
 - name: Install Config
   template: src=defaults.j2 dest=/etc/default/selenium_{{sel_role}} owner=root group=root mode=644
   tags: ['config']
-  notify: selenium_reload
+  notify: "selenium_reload {{sel_role}}"
 
 - name: Install init script
   template: src=init.j2 dest=/etc/init.d/selenium_{{sel_role}} owner=root group=root mode=755
   tags: ['config']
-  notify: selenium_started
+  notify: "selenium_started {{sel_role}}"
 
 - name: Install browser
   apt: name={{item}}
