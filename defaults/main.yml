@@ -7,6 +7,8 @@ download_url: "{{download_server}}/{{jar_file}}"
 
 sel_role: standalone
 
+run_xvfb: 1
+
 hub: ''
 java_opts: ''
 extra_args: ''

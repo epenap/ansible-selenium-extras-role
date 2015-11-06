@@ -7,6 +7,12 @@
 - name: Copy selenium into place
   copy: src={{jar_file}}  dest=/usr/local/lib/{{jar_file}} owner=root group=root mode=644
 
+- name: Install xvfb
+  apt: name={{item}}
+  when: sel_role != 'hub' and run_xvfb == 1
+  with_items:
+    - xvfb
+
 - name: Install Config
   template: src=defaults.j2 dest=/etc/default/selenium_{{sel_role}} owner=root group=root mode=644
   tags: ['config']
@@ -17,9 +23,4 @@
   tags: ['config']
   notify: "selenium_started {{sel_role}}"
 
-- name: Install browser
-  apt: name={{item}}
-  when: sel_role != 'hub'
-  with_items:
-    - xvfb
-    - firefox
+
