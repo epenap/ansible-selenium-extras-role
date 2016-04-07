@@ -12,6 +12,7 @@
   when: sel_role != 'hub' and run_xvfb == 1
   with_items:
     - xvfb
+    - firefox
 
 - name: Install Config
   template: src=defaults.j2 dest=/etc/default/selenium_{{sel_role}} owner=root group=root mode=644
