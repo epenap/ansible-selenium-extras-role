@@ -18,6 +18,7 @@
   when: sel_role != 'hub' and run_xvfb == 1
   with_items:
     - xvfb
+    - firefox
 
 - name: Add grid extras configuration file
   template: src=selenium_grid_extras_config_{{sel_role}}.j2 dest={{directory}}/selenium_grid_extras_config.json owner=root group=root mode=644
