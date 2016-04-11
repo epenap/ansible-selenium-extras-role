@@ -87,22 +87,11 @@ start)
     fi
     install -o ${SE_USER} -g ${SE_GROUP} -d ${JVM_TMP}
 
-    if [ ! -z "${RUN_XVFB}" ]; then
+    if [ ! -z "${RUN_XVFB}" -a "{{sel_role}}" = "node" ]; then
         log_daemon_msg "Starting virtual X frame buffer: Xvfb"
         start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --background --exec $XVFB -- $XVFBARGS
         export DISPLAY=:1
         log_daemon_msg "."
-    fi
-
-    if [ ! -z "${ROLE}" ]; then
-        JAR_ARGS="-role ${ROLE}"
-    fi
-    if [ ! -z "${HUB}" ]; then
-        JAR_ARGS="${JAR_ARGS} -hub ${HUB}"
-    fi
-
-    if [ ! -z "${PORT}" ]; then
-        JAR_ARGS="${JAR_ARGS} -port ${PORT}"
     fi
 
     start-stop-daemon   --start \
@@ -111,7 +100,8 @@ start)
                         --make-pidfile \
                         --user "${SE_USER}" \
                         --group "${SE_GROUP}" \
-                        --exec ${JAVA_HOME}/bin/java -- ${JAVA_OPTS} -jar /usr/local/lib/{{jar_file}} ${JAR_ARGS} ${EXTRA_ARGS}  2>&1 \
+                        --chdir /usr/local/lib/{{sel_role}} \
+                        --exec ${JAVA_HOME}/bin/java -- ${JAVA_OPTS} -jar /usr/local/lib/{{sel_role}}/{{jar_file}} ${JAR_ARGS} ${EXTRA_ARGS}  2>&1 \
         | logger -t "${NAME}"
 ;;
 stop)
@@ -129,7 +119,7 @@ stop)
             log_daemon_msg "${NAME} stopped"
         fi
 
-        if [ ! -z "${RUN_XVFB}" ]; then
+        if [ ! -z "${RUN_XVFB}" -a "{{sel_role}}" = "node" ]; then
             log_daemon_msg "Stopping virtual X frame buffer: Xvfb"
             start-stop-daemon --stop --quiet --pidfile $PIDFILE
             log_daemon_msg "."

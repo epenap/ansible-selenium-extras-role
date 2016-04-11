@@ -1,17 +1,33 @@
 ---
-- name: Download selenium on 'master' if we don't have it
+- set_fact: 
+    directory: "/usr/local/lib/{{sel_role}}"
+
+- name: Download selenium grid extras jar if we don't have it
   connection: local
   sudo: False
-  get_url: url={{download_url}}  dest={{cur_dir}}/{{jar_file}} force=no
+  get_url: url={{selenium_grid_extras_download_url}}  dest={{cur_dir}}/{{jar_file}} force=no
+
+- name: Create grid extras directories 
+  file: path={{directory}} state=directory mode=0755
 
 - name: Copy selenium into place
-  copy: src={{jar_file}}  dest=/usr/local/lib/{{jar_file}} owner=root group=root mode=644
+  copy: src={{jar_file}}  dest={{directory}}/{{jar_file}} owner=root group=root mode=644
 
 - name: Install xvfb
   apt: name={{item}}
   when: sel_role != 'hub' and run_xvfb == 1
   with_items:
     - xvfb
+
+- name: Add grid extras configuration file
+  template: src=selenium_grid_extras_config_{{sel_role}}.j2 dest={{directory}}/selenium_grid_extras_config.json owner=root group=root mode=644
+  tags: ['config']
+  notify: "selenium_reload {{sel_role}}"
+
+- name: Add grid extra node/hub configuration file
+  template: src={{sel_role}}.j2 dest={{directory}}/{{sel_role}}.json owner=root group=root mode=644
+  tags: ['config']
+  notify: "selenium_reload {{sel_role}}"
 
 - name: Install Config
   template: src=defaults.j2 dest=/etc/default/selenium_{{sel_role}} owner=root group=root mode=644
@@ -22,5 +38,3 @@
   template: src=init.j2 dest=/etc/init.d/selenium_{{sel_role}} owner=root group=root mode=755
   tags: ['config']
   notify: "selenium_started {{sel_role}}"
-
-

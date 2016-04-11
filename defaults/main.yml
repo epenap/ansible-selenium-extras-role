@@ -1,9 +1,15 @@
 ---
 server_version_major: 2.52
 server_version: "{{server_version_major}}.0"
-download_server: "http://selenium-release.storage.googleapis.com/{{server_version_major}}"
-jar_file: selenium-server-standalone-{{server_version}}.jar
-download_url: "{{download_server}}/{{jar_file}}"
+
+grid_extras_version: 1.11.8
+jar_file: SeleniumGridExtras-{{grid_extras_version}}-SNAPSHOT-jar-with-dependencies.jar
+selenium_grid_extras_download_url: "https://github.com/groupon/Selenium-Grid-Extras/releases/download/{{grid_extras_version}}/{{jar_file}}"
+
+chrome_driver_version: 2.21
+ie_driver_version: 2.53.1
+
+max_sessions: 5
 
 sel_role: standalone
 
