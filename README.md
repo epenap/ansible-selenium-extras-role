@@ -1,7 +1,7 @@
-ansible-selenium-role
+ansible-selenium-extra-role
 =====================
 
-This role installs the selenium server
+This role installs the selenium server using selenium grid extras project [Selenium-Grid-Extras](https://github.com/groupon/Selenium-Grid-Extras)
 
 Requirements
 ------------
@@ -13,17 +13,22 @@ Role Variables
 
 Info for downloading seleinum version
 
-    download_url: http://selenium.googlecode.com/files/{{jar_file}}
-    jar_file: selenium-server-standalone-{{server_version}}.jar
-    server_version: 2.39.0
+    server_version_major: 2.52
+    server_version: "{{server_version_major}}.0"
+    grid_extras_version: 1.11.8
+    chrome_driver_version: 2.21
+    ie_driver_version: 2.53.1
+    max_sessions: 5
+    sel_role: hub
+    run_xvfb: 1
 
-Roles can be: standalone, hub or node
+Roles can be: hub or node
 
-    sel_role: standalone
+    sel_role: node
 
 URI for slaves to find hub server
 
-    hub: ''
+    hub_host: ''
 
 Jvm settings
 
@@ -49,7 +54,8 @@ License
 
 GPLv2
 
-Author Information
+Credits
 ------------------
 
-briancoca+selenium@gmail.com
+Based on [github/ansible-selenium-role](https://github.com/bcoca/ansible-selenium-role)
+
