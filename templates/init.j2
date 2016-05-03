@@ -62,6 +62,9 @@ if [ -z "$JAVA_HOME" -a ! -z "${SYSTEM_JAVA}" ]; then
 fi
 export JAVA_HOME JAVA_TMP JAVA_OPTS
 
+# perform grid stability fix
+export DBUS_SESSION_BUS_ADDRESS=/dev/null
+
 case $1 in
 start)
     $0 status
